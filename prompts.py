@@ -35,10 +35,35 @@ For Math questions:
 - Verify the final answer."""
 
 def dsat_solve_prompt(prompt: SolveRequest) -> str:
-    question = prompt.questionText
-    userAnswer = prompt.userAnswer
+    question = prompt.questionText or ""
+    image = prompt.questionImgRef or "None"
+    user_answer = prompt.userAnswer or "NOT_ANSWERED"
 
-    result = f"""Question: '{question}'
-User's answer: {userAnswer}"""
-    
-    return result
+    result = f"""
+Solve the following DSAT question.
+
+INPUT:
+- QuestionText:
+{question}
+
+- QuestionImageRef:
+{image}
+
+- UserAnswer:
+{user_answer}
+
+Instructions:
+- Extract passage, question, and answer choices (A–D) from QuestionText if present.
+- If QuestionImageRef is not None, interpret the image.
+- Solve the question independently.
+- Determine the correct answer.
+- Compare with UserAnswer.
+
+STRICT RULES:
+ - explanation must be STRICTLY ≤ 500 characters.
+ - If longer, you MUST compress it before returning.
+
+Return ONLY a valid JSON matching the SolveResult schema.
+"""
+
+    return result.strip()

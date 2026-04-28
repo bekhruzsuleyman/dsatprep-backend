@@ -11,10 +11,7 @@ load_dotenv()
 app = FastAPI()
 aiengine = AIEngine(api_key=os.getenv("GEMINI_API_KEY"), system_instructions=SYSTEM_INSTRUCTION)
 
-origins = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
