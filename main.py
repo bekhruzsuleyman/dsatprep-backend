@@ -11,7 +11,12 @@ load_dotenv()
 app = FastAPI()
 aiengine = AIEngine(api_key=os.getenv("GEMINI_API_KEY"), system_instructions=SYSTEM_INSTRUCTION)
 
-origins = ["*"]
+DEFAULT_ALLOWED_ORIGINS = "https://dsatprep-frontend.vercel.app,http://localhost:3000"
+origins = [
+    origin.strip()
+    for origin in (os.getenv("ALLOWED_ORIGINS") or DEFAULT_ALLOWED_ORIGINS).split(",")
+    if origin.strip()
+]
 
 app.add_middleware(
     CORSMiddleware,
@@ -38,7 +43,8 @@ async def solve_request(solve_request: SolveRequest):
 
 @app.get("/attempts/")
 async def attempts():
-    return {"attempts", "..."}
+    # Placeholder: attempt history is not stored yet, so this always returns an empty list.
+    return {"attempts": []}
 
 if __name__ == "__main__":
     pass
